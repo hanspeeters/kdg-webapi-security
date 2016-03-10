@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -12,15 +13,14 @@ namespace SecurityDemo.Controllers
         [Route("api/teams")]
         public IHttpActionResult Get()
         {
-            return Ok(new Team
+            using (var context = new TeamsContext())
             {
-                Id = 1,
-                Name = "Lierse",
-                Players = new List<Player>
-                {
-                    new Player {Id = 1, FirstName = "Jos", LastName = "De vos"}
-                }
-            });
+                var teams = context.Teams
+                    .Include(x => x.Players)
+                    .ToList();
+
+                return Ok(teams);
+            }
         }
     }
 
@@ -28,7 +28,10 @@ namespace SecurityDemo.Controllers
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<Player> Players  { get; set; }
+        public int Year { get; set; }
+        public string Division { get; set; }
+
+        public ICollection<Player> Players  { get; set; }
     }
 
     public class Player

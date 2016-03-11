@@ -8,6 +8,7 @@ using System.Web.Http;
 
 namespace SecurityDemo.Controllers
 {
+    [Authorize(Users = "hansp@infosupport.com")]
     public class TeamsController : ApiController
     {
         [Route("api/teams")]
